@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Questboard.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+153c761bdf13cc35a2a183f86ba9773a6274a2e8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b8e8d452b08b169971b071f1e0c27713a9239eef")]
 [assembly: System.Reflection.AssemblyProductAttribute("Questboard.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Questboard.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
