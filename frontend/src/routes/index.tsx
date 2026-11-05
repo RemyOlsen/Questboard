@@ -1,5 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
 import styled from "styled-components";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import Row from "../styles/layout/Row";
+import Column from "../styles/layout/Column";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
@@ -7,16 +9,44 @@ export const Route = createFileRoute("/")({
 
 function HomePage() {
   return (
-    <Container>
-      <Heading>QuestBoard</Heading>
-      <Description>
-        To make progressing on tasks and projects feel like a game. TO-DO list,
-        Kanban, Scrum etc. Want it to be Customizable so everything can be
-        modified to fit a teams preference for progress.
-      </Description>
+    <Column gap='2rem' align='center' justify='center'>
+      <Heading>Questboard</Heading>
 
-      <StyledLink to='/test'>To Test Page</StyledLink>
-    </Container>
+      <Row gap='1rem' align='center' justify='center'>
+        {/* Buttons are temp and non functional, just for visual purposes atm */}
+        <button
+          style={{
+            backgroundColor: "#282c34",
+            color: "#61dafb",
+            borderRadius: "8px",
+            padding: "12px 20px",
+          }}
+        >
+          Login
+        </button>
+        {/* Buttons are temp and non functional, just for visual purposes atm */}
+        <button
+          style={{
+            backgroundColor: "#282c34",
+            color: "#61dafb",
+            borderRadius: "8px",
+            padding: "12px 20px",
+          }}
+        >
+          Sign Up
+        </button>
+      </Row>
+      <Column gap='2rem'>
+        <Description>
+          To make progressing on tasks and projects feel like a game. TO-DO
+          list, Kanban, Scrum etc.
+          <br />
+          It's going to be Customizable so everything can be modified to fit a
+          teams preference for progress.
+        </Description>
+        <StyledLink to='/test'>To Test Page</StyledLink>
+      </Column>
+    </Column>
   );
 }
 
@@ -35,7 +65,7 @@ const Heading = styled.h1`
 const Description = styled.p`
   font-size: 1.5rem;
   line-height: 1.5;
-  color: #e0e0e0;
+  // color: #e0e0e0;
 `;
 
 const StyledLink = styled(Link)`
