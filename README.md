@@ -1,25 +1,27 @@
 # Questboard
 
-A gamified productivity board
+A gamified productivity board combined with an idle game.
 
-## This page is a WIP
+## TechStack
 
 Will be made using mainly:
 
 ### Frontend
 
-React Vite
-
+React
+<br>
+Vite
+<br>
 TypeScript
-
+<br>
 Tanstack Router
-
+<br>
 Tanstack Query
 
 ### Backend
 
 C# / ASP.NET Core
-
+<br>
 PostgreSQL
 
 ### Later addition:
