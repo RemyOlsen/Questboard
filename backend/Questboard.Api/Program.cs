@@ -24,9 +24,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
-// Configure the HTTP request pipeline.
-app.UseHttpsRedirection();
-app.UseCors("Frontend");
+app.UseHttpsRedirection(); // Enable HTTPS redirection to ensure secure communication between the client and server.
+app.UseCors("Frontend"); // Apply the CORS policy named "Frontend" to allow requests from the specified frontend origin.
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
