@@ -1,10 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { fetchQuests } from "../api/quests";
 import styled from "styled-components";
 import Column from "../styles/layout/Column";
-import Row from "../styles/layout/Row";
 
 export const Route = createFileRoute("/test")({
   component: RouteComponent,
