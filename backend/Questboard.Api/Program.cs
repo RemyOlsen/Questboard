@@ -41,6 +41,13 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast");
 
+// Add a new endpoint to get all quests from the database
+app.MapGet("/api/quests", async (AppDbContext db) =>
+{
+    var quests = await db.Quests.ToListAsync();
+    return Results.Ok(quests);
+});
+
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
