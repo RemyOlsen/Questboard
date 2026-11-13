@@ -50,12 +50,12 @@ function HomePage() {
   );
 }
 
-const Container = styled.main`
-  max-width: 800px;
-  margin: 100px auto;
-  padding: 23px;
-  text-align: center;
-`;
+// const Container = styled.main`
+//   max-width: 800px;
+//   margin: 100px auto;
+//   padding: 23px;
+//   text-align: center;
+// `;
 
 const Heading = styled.h1`
   font-size: 3rem;
