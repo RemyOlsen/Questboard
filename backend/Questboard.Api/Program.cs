@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Questboard.Api.Data;
+using Questboard.Api.DTOs;
+using Questboard.Api.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -36,9 +38,40 @@ if (app.Environment.IsDevelopment())
 // Add a new endpoint to get all quests from the database
 app.MapGet("/api/quests", async (AppDbContext db) =>
 {
-    // TODO: only return quests for user/team, not all quests
+    // TODO: only return quests for user/team, not all quests in the db
     var quests = await db.Quests.ToListAsync();
     return Results.Ok(quests);
+});
+
+// Posts to the database
+app.MapPost("/api/quests", async (CreateQuestDto request, AppDbContext db) =>
+{
+
+    if (string.IsNullOrWhiteSpace(request.Title))
+    {
+        Console.WriteLine($"Error: Quest title is required");
+        return Results.BadRequest("Quest title is required");
+    }
+
+    if (request.XpReward <= 0)
+    {
+        Console.WriteLine($"Error: XP reward must be greater than zero.");
+        return Results.BadRequest("XP reward must be greater than zero.");
+    }
+
+    var quest = new Quest
+    {
+        Title = request.Title.Trim(),
+        Description = request.Description?.Trim() ?? string.Empty,
+        XpReward = request.XpReward,
+    };
+
+    Console.WriteLine(quest);
+    db.Quests.Add(quest);
+
+    await db.SaveChangesAsync();
+
+    return Results.Created($"/api/quests{quest.Id}", quest);
 });
 
 app.Run();
