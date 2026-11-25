@@ -1,6 +1,28 @@
 @Questboard.Api_HostAddress = http://localhost:5102
 
-GET {{Questboard.Api_HostAddress}}/weatherforecast/
+###
+@baseUrl = http://localhost:5102
+
+### Get all quests
+GET {{baseUrl}}/api/quests
 Accept: application/json
 
-###
+### Create a quest
+POST {{baseUrl}}/api/quests
+Content-Type: application/json
+
+{
+    "title": "Learn TanStack Query",
+    "description": "Understand how mutations work",
+    "xpReward": 100
+}
+
+### Test invalid quest
+POST {{baseUrl}}/api/quests
+Content-Type: application/json
+
+{
+    "title": "",
+    "description": "This quest should not be created",
+    "xpReward": 100
+}

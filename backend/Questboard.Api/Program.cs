@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Questboard.Api.Data;
+using Questboard.Api.DTOs;
+using Questboard.Api.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -33,37 +35,43 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
 // Add a new endpoint to get all quests from the database
 app.MapGet("/api/quests", async (AppDbContext db) =>
 {
+    // TODO: only return quests for user/team, not all quests in the db
     var quests = await db.Quests.ToListAsync();
     return Results.Ok(quests);
 });
 
-app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+// Posts to the database
+app.MapPost("/api/quests", async (CreateQuestDto request, AppDbContext db) =>
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+
+    if (string.IsNullOrWhiteSpace(request.Title))
+    {
+        Console.WriteLine($"Error: Quest title is required");
+        return Results.BadRequest("Quest title is required");
+    }
+
+    if (request.XpReward <= 0)
+    {
+        Console.WriteLine($"Error: XP reward must be greater than zero.");
+        return Results.BadRequest("XP reward must be greater than zero.");
+    }
+
+    var quest = new Quest
+    {
+        Title = request.Title.Trim(),
+        Description = request.Description?.Trim() ?? string.Empty,
+        XpReward = request.XpReward,
+    };
+
+    Console.WriteLine(quest);
+    db.Quests.Add(quest);
+
+    await db.SaveChangesAsync();
+
+    return Results.Created($"/api/quests{quest.Id}", quest);
+});
+
+app.Run();
