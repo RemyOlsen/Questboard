@@ -35,15 +35,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-// Add a new endpoint to get all quests from the database
-app.MapGet("/api/quests", async (AppDbContext db) =>
-{
-    // TODO: only return quests for user/team, not all quests in the db
-    var quests = await db.Quests.ToListAsync();
-    return Results.Ok(quests);
-});
-
-// POST to the database
+// CREATE: Post to the database
 app.MapPost("/api/quests", async (CreateQuestDto request, AppDbContext db) =>
 {
 
@@ -74,6 +66,43 @@ app.MapPost("/api/quests", async (CreateQuestDto request, AppDbContext db) =>
     return Results.Created($"/api/quests{quest.Id}", quest);
 });
 
+// READ: FETCHes all the entries
+app.MapGet("/api/quests", async (AppDbContext db) =>
+{
+    // TODO: only return quests for user/team, not all quests in the db
+    var quests = await db.Quests.ToListAsync();
+    return Results.Ok(quests);
+});
+
+// UPDATE: PUT endpoint
+app.MapPut("api/quests/{id:int}", async ( int id, UpdateQuestDto request, AppDbContext db) =>
+{
+    var quest = await db.Quests.FindAsync(id);
+
+    if (quest is null)
+    {
+        return Results.NotFound("Quest not found.");
+    }
+
+    if (string.IsNullOrWhiteSpace(request.Title))
+    {
+        return Results.BadRequest("Quest title is required");
+    }
+
+    if (request.XpReward <= 0)
+    {
+        return Results.BadRequest("Xp reward must be greater than zero.");
+    }
+
+    quest.Title = request.Title.Trim();
+    quest.Description = request.Description?.Trim() ?? string.Empty;
+    quest.XpReward = request.XpReward;
+
+    await db.SaveChangesAsync();
+    
+    return Results.Ok(quest);
+});
+
 // DELETE
 app.MapDelete("api/quests/{id:int}", async (int id, AppDbContext db) =>
 {
@@ -90,5 +119,6 @@ app.MapDelete("api/quests/{id:int}", async (int id, AppDbContext db) =>
 
     return Results.NoContent(); 
 });
+
 
 app.Run();

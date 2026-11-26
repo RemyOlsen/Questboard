@@ -32,3 +32,33 @@ DELETE {{baseUrl}}/api/quests/9
 
 ### Attempt to delete a nonexistent quest
 DELETE {{baseUrl}}/api/quests/67
+
+### Update an existing quest
+PUT {{baseUrl}}/api/quests/22
+Content-Type:  application/json
+
+{
+    "title": "Learn TypeScript",
+    "description": "Practice inferfaces and union types",
+    "XpReward": 75
+}
+
+### Update a nonexistent quest
+PUT {{baseUrl}}/api/quests/999999
+Content-Type: application/json
+
+{
+    "title": "Test quest",
+    "description": "Testing",
+    "xpReward": 50
+}
+
+### Update a quest with invalid data
+PUT {{baseUrl}}/api/quests/4
+Content-Type: application/json
+
+{
+    "title": "",
+    "description": "Testing validation",
+    "xpReward": 0
+}
