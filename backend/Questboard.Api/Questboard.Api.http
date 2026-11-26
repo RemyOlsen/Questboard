@@ -26,3 +26,9 @@ Content-Type: application/json
     "description": "This quest should not be created",
     "xpReward": 100
 }
+
+### Delete a quest
+DELETE {{baseUrl}}/api/quests/9
+
+### Attempt to delete a nonexistent quest
+DELETE {{baseUrl}}/api/quests/67

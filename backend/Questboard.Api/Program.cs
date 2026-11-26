@@ -43,7 +43,7 @@ app.MapGet("/api/quests", async (AppDbContext db) =>
     return Results.Ok(quests);
 });
 
-// Posts to the database
+// POST to the database
 app.MapPost("/api/quests", async (CreateQuestDto request, AppDbContext db) =>
 {
 
@@ -72,6 +72,23 @@ app.MapPost("/api/quests", async (CreateQuestDto request, AppDbContext db) =>
     await db.SaveChangesAsync();
 
     return Results.Created($"/api/quests{quest.Id}", quest);
+});
+
+// DELETE
+app.MapDelete("api/quests/{id:int}", async (int id, AppDbContext db) =>
+{
+   var quest = await db.Quests.FindAsync(id);
+
+   if (quest is null)
+    {
+        return Results.NotFound("Quest not found.");
+    }
+
+    db.Quests.Remove(quest);
+
+    await db.SaveChangesAsync();
+
+    return Results.NoContent(); 
 });
 
 app.Run();
