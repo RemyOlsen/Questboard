@@ -27,3 +27,13 @@ export async function createQuest(quest: CreateQuestRequest): Promise<Quest> {
 
   return response.json() as Promise<Quest>;
 }
+
+export async function deleteQuest(id: number): Promise<void> {
+  const response = await fetch(`${API_URL}/api/quests/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch quest with id: ${id}`);
+  }
+}

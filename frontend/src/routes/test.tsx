@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { fetchQuests } from "../api/quests";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteQuest, fetchQuests } from "../api/quests";
 import styled from "styled-components";
 import Column from "../styles/layout/Column";
+import Row from "../styles/layout/Row";
 import { QuestForm } from "../components/QuestForm";
 
 export const Route = createFileRoute("/test")({
@@ -10,6 +12,8 @@ export const Route = createFileRoute("/test")({
 });
 
 function RouteComponent() {
+  const [confirmId, setConfirmId] = useState<number | null>(null);
+
   const {
     data: quests,
     isPending,
@@ -18,6 +22,17 @@ function RouteComponent() {
   } = useQuery({
     queryKey: ["quests"],
     queryFn: fetchQuests,
+  });
+
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: deleteQuest,
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: ["quests"],
+      });
+    },
   });
 
   if (isPending) {
@@ -35,9 +50,49 @@ function RouteComponent() {
       <h1>Test Quests</h1>
       {quests.map((quest) => (
         <QuestCard key={quest.id}>
-          <h2>{quest.title}</h2>
+          <Row>
+            <h2>{quest.title}</h2>
+            <h3>{quest.id}</h3>
+          </Row>
           <p>{quest.description}</p>
-          <span>+{quest.xpReward} XP</span>
+          <Row>
+            <span>+{quest.xpReward} XP</span>
+            {confirmId === quest.id ? (
+              <>
+                <button
+                  onClick={() => {
+                    mutation.mutate(quest.id);
+                    setConfirmId(null);
+                  }}
+                  disabled={mutation.isPending}
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={() => setConfirmId(null)}
+                  disabled={mutation.isPending}
+                >
+                  No
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => setConfirmId(quest.id)}
+                  disabled={mutation.isPending}
+                >
+                  {mutation.isPending && mutation.variables === quest.id
+                    ? "Deleting..."
+                    : "Delete"}
+                </button>
+              </>
+            )}
+          </Row>
+          <ErrorMessage role='alert'>
+            {mutation.isError && mutation.variables === quest.id
+              ? mutation.error.message
+              : ""}
+          </ErrorMessage>
         </QuestCard>
       ))}
     </Column>
@@ -54,10 +109,22 @@ const QuestCard = styled.article`
 
   h2 {
     margin-top: 0;
+    margin-right: auto;
+  }
+
+  h3 {
+    margin-top: 0;
   }
 
   span {
     color: #a78bfa;
     font-weight: bold;
+    margin-right: auto;
   }
+`;
+
+const ErrorMessage = styled.div`
+  min-height: 1.25rem;
+  font-size: 0.875rem;
+  color: #f87171;
 `;
