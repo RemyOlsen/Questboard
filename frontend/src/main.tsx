@@ -30,7 +30,7 @@ createRoot(document.getElementById("root")!).render(
       <GlobalStyles
         theme={{
           colors: {
-            background: "#0f0b16", // #0f0b16 is a dark purple color.
+            background: "#0a0910", // #0f0b16 is a dark purple color.
             text: "#e0e0e0", // #e0e0e0 is a light gray color for text.
           },
         }}

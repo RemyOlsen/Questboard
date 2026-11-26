@@ -1,6 +1,64 @@
 @Questboard.Api_HostAddress = http://localhost:5102
 
-GET {{Questboard.Api_HostAddress}}/weatherforecast/
+###
+@baseUrl = http://localhost:5102
+
+### Get all quests
+GET {{baseUrl}}/api/quests
 Accept: application/json
 
-###
+### Create a quest
+POST {{baseUrl}}/api/quests
+Content-Type: application/json
+
+{
+    "title": "Learn TanStack Query",
+    "description": "Understand how mutations work",
+    "xpReward": 100
+}
+
+### Test invalid quest
+POST {{baseUrl}}/api/quests
+Content-Type: application/json
+
+{
+    "title": "",
+    "description": "This quest should not be created",
+    "xpReward": 100
+}
+
+### Delete a quest
+DELETE {{baseUrl}}/api/quests/9
+
+### Attempt to delete a nonexistent quest
+DELETE {{baseUrl}}/api/quests/67
+
+### Update an existing quest
+PUT {{baseUrl}}/api/quests/22
+Content-Type:  application/json
+
+{
+    "title": "Learn TypeScript",
+    "description": "Practice inferfaces and union types",
+    "XpReward": 75
+}
+
+### Update a nonexistent quest
+PUT {{baseUrl}}/api/quests/999999
+Content-Type: application/json
+
+{
+    "title": "Test quest",
+    "description": "Testing",
+    "xpReward": 50
+}
+
+### Update a quest with invalid data
+PUT {{baseUrl}}/api/quests/4
+Content-Type: application/json
+
+{
+    "title": "",
+    "description": "Testing validation",
+    "xpReward": 0
+}
